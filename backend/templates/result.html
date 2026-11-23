@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Resume Analysis Result | ResumeAI</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 10% 10%, #102a43 0, transparent 30%),
+                radial-gradient(circle at 90% 20%, #092e2a 0, transparent 28%),
+                #05080d;
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            height: 72px;
+            background: rgba(7, 11, 18, 0.95);
+            border-bottom: 1px solid #1e3445;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 5%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+
+            background: linear-gradient(
+                135deg,
+                #06b6d4,
+                #2563eb
+            );
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+        }
+
+        .logo h2 {
+            font-size: 22px;
+        }
+
+        .logo h2 span {
+            color: #22d3ee;
+        }
+
+        .logo p {
+            font-size: 11px;
+            color: #718096;
+            margin-top: 3px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #b7c5d3;
+
+            padding: 10px 18px;
+
+            border: 1px solid #29445a;
+            border-radius: 9px;
+
+            background: #0b141e;
+
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #22d3ee;
+            border-color: #22d3ee;
+        }
+
+
+        /* ================= HEADER ================= */
+
+        .header {
+            text-align: center;
+            padding: 55px 20px 35px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .header h1 span {
+            color: #22d3ee;
+        }
+
+        .header p {
+            color: #8494a7;
+            font-size: 15px;
+        }
+
+
+        /* ================= MAIN CONTAINER ================= */
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+
+        /* ================= SCORE CARDS ================= */
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+
+            max-width: 850px;
+            margin: 0 auto 30px;
+        }
+
+        .score-card {
+            background: rgba(10, 18, 27, 0.95);
+
+            border: 1px solid #1d3548;
+            border-radius: 18px;
+
+            padding: 30px;
+
+            text-align: center;
+
+            box-shadow:
+                0 15px 40px rgba(0,0,0,0.35);
+
+            transition: 0.3s;
+        }
+
+        .score-card:hover {
+            transform: translateY(-4px);
+            border-color: #22d3ee;
+        }
+
+        .score-card h3 {
+            color: #9aacbc;
+            font-size: 15px;
+            margin-bottom: 18px;
+        }
+
+        .score {
+            font-size: 42px;
+            font-weight: 800;
+        }
+
+        .ats-score {
+            color: #22d3ee;
+        }
+
+        .skills-count {
+            color: #34d399;
+        }
+
+        .score-label {
+            color: #657789;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+
+        /* ================= TWO COLUMN SECTIONS ================= */
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+
+        /* ================= SECTIONS ================= */
+
+        .section {
+            background: rgba(9, 16, 24, 0.96);
+
+            border: 1px solid #1c3041;
+            border-radius: 18px;
+
+            padding: 28px;
+
+            box-shadow:
+                0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-title h2 {
+            font-size: 20px;
+        }
+
+        .section-icon {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 18px;
+        }
+
+        .blue-icon {
+            background: #0b2635;
+            color: #22d3ee;
+        }
+
+        .green-icon {
+            background: #08291f;
+            color: #34d399;
+        }
+
+        .red-icon {
+            background: #301713;
+            color: #fb7185;
+        }
+
+
+        /* ================= SKILLS ================= */
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill {
+            padding: 9px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .matched {
+            background: #07372b;
+            color: #34d399;
+            border: 1px solid #12664f;
+        }
+
+        .missing {
+            background: #351b18;
+            color: #fb7185;
+            border: 1px solid #74352c;
+        }
+
+        .detected {
+            background: #10283a;
+            color: #38bdf8;
+            border: 1px solid #1f536f;
+        }
+
+
+        /* ================= RECOMMENDATION ================= */
+
+        .recommendation {
+            margin-top: 0;
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #101c2c,
+                    #09221f
+                );
+
+            border: 1px solid #1e5960;
+        }
+
+        .recommendation h2 {
+            color: #22d3ee;
+            margin-bottom: 18px;
+        }
+
+        .recommendation h3 {
+            font-size: 23px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .recommendation p {
+            color: #9aacbc;
+            line-height: 1.7;
+        }
+
+
+        /* ================= BUTTONS ================= */
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 35px 0 50px;
+        }
+
+        .action {
+            text-decoration: none;
+
+            padding: 14px 24px;
+
+            border-radius: 10px;
+
+            font-weight: bold;
+
+            transition: 0.3s;
+        }
+
+        .primary {
+            background: linear-gradient(
+                90deg,
+                #0891b2,
+                #2563eb
+            );
+
+            color: white;
+        }
+
+        .secondary {
+            background: #101923;
+            border: 1px solid #29445a;
+            color: #b9c8d6;
+        }
+
+        .action:hover {
+            transform: translateY(-2px);
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+
+            padding: 28px;
+
+            border-top: 1px solid #1b2d3d;
+
+            color: #637386;
+
+            background: #05090e;
+
+            font-size: 13px;
+        }
+
+        footer strong {
+            color: #22d3ee;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 850px) {
+
+            .score-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+        }
+
+
+        @media(max-width: 600px) {
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .action {
+                text-align: center;
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            📄
+        </div>
+
+        <div>
+
+            <h2>
+                Resume<span>AI</span>
+            </h2>
+
+            <p>
+                AI Resume Screening System
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <a href="/" class="back-btn">
+        ← Back to Dashboard
+    </a>
+
+</nav>
+
+
+
+<!-- ================= HEADER ================= -->
+
+<div class="header">
+
+    <h1>
+        Resume <span>Analysis Result</span>
+    </h1>
+
+    <p>
+        AI-powered analysis of your resume against the job description
+    </p>
+
+</div>
+
+
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- ================= SCORE CARDS ================= -->
+
+    <div class="score-grid">
+
+
+        <!-- ATS MATCH -->
+
+        <div class="score-card">
+
+            <h3>
+                ATS MATCH
+            </h3>
+
+            <div class="score ats-score">
+
+                {{ ats_score }}%
+
+            </div>
+
+            <div class="score-label">
+
+                Job compatibility
+
+            </div>
+
+        </div>
+
+
+
+        <!-- SKILLS DETECTED -->
+
+        <div class="score-card">
+
+            <h3>
+                SKILLS DETECTED
+            </h3>
+
+            <div class="score skills-count">
+
+                {{ matched_skills|length }}
+
+            </div>
+
+            <div class="score-label">
+
+                Skills found in resume
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+   <!--========== RESUME SCORE ===============-->
+<div class="score-card">
+    <h3>RESUME SCORE</h3>
+
+    <div class="score">
+        {{ resume_score }}%
+    </div>
+
+    <div class="score-label">
+        Overall Resume Score
+    </div>
+</div>
+
+    <!-- ================= MATCHED + MISSING ================= -->
+
+    <div class="two-column">
+
+
+        <!-- MATCHED SKILLS -->
+
+        <div class="section">
+
+            <div class="section-title">
+
+                <div class="section-icon green-icon">
+                    ✓
+                </div>
+
+                <h2>
+                    Matched Skills
+                </h2>
+
+            </div>
+
+
+            <div class="skills">
+
+                {% for skill in matched_skills %}
+
+                    <span class="skill matched">
+                        ✓ {{ skill }}
+                    </span>
+
+                {% else %}
+
+                    <span class="skill missing">
+                        No matched skills found
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- MISSING SKILLS -->
+
+        <div class="section">
+
+            <div class="section-title">
+
+                <div class="section-icon red-icon">
+                    !
+                </div>
+
+                <h2>
+                    Missing Skills
+                </h2>
+
+            </div>
+
+
+            <div class="skills">
+
+                {% for skill in missing_skills %}
+
+                    <span class="skill missing">
+                        {{ skill }}
+                    </span>
+
+                {% else %}
+
+                    <span class="skill matched">
+                        ✓ No missing skills
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= ALL DETECTED + RECOMMENDATION ================= -->
+
+    <div class="two-column">
+
+
+        <!-- ALL DETECTED SKILLS -->
+
+
+<div class="section">
+
+    <div class="section-title">
+        <div class="section-icon blue-icon">
+            🧠
+        </div>
+
+        <h2>All Detected Skills</h2>
+    </div>
+
+    <div class="skills">
+        {% if detected_skills %}
+            {% for skill in detected_skills %}
+                <span class="skill detected">
+                    ✓ {{ skill }}
+                </span>
+            {% endfor %}
+        {% else %}
+            <span class="skill missing">
+                No skills detected
+            </span>
+        {% endif %}
+    </div>
+
+</div>
+
+
+        <!-- RECOMMENDATION -->
+
+        <div class="recommendation">
+
+            <h2>
+                🎯 Screening Recommendation
+            </h2>
+
+
+            <h3>
+                {{ recommendation_title }}
+            </h3>
+
+
+            <p>
+                {{ recommendation_text }}
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= BUTTONS ================= -->
+
+    <div class="actions">
+        
+    <a href="{{ url_for('download_report') }}" class="download-btn">
+    📥 Download Report
+    </a>
+
+
+
+        <a href="/" class="action primary">
+
+            🔄 Analyze Another Resume
+
+        </a>
+
+
+        <a href="/read_resume" class="action secondary">
+
+            📄 Read Resume
+
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+
+        AI Resume Screening System
+
+        &nbsp; • &nbsp;
+
+        Built with Python & Flask
+
+    </p>
+
+
+    <p style="margin-top:8px;">
+
+        Developed by
+
+        <strong>
+            Lavanyasri Velpuri
+        </strong>
+
+    </p>
+
+</footer>
+
+
+</body>
+</html>

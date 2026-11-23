@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ResumeAI | AI Resume Screening System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #050508;
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* ---------- NAVBAR ---------- */
+
+        nav {
+            height: 75px;
+            background: #09090f;
+            border-bottom: 1px solid #272733;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #8b2cff, #315bea);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .logo h2 {
+            font-size: 23px;
+        }
+
+        .logo h2 span {
+            color: #a855f7;
+        }
+
+        .logo p {
+            font-size: 11px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+        }
+
+        .nav-links a {
+            color: #c8c8d0;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #a855f7;
+        }
+
+        .ai-badge {
+            border: 1px solid #6d28d9;
+            padding: 10px 18px;
+            border-radius: 20px;
+            color: #c084fc;
+            font-size: 13px;
+            background: #120b1c;
+        }
+
+        /* ---------- HERO ---------- */
+
+        .hero {
+            text-align: center;
+            padding: 70px 20px 50px;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            font-weight: 800;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, #a855f7, #3b82f6);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            color: #a4a4ae;
+            font-size: 18px;
+            max-width: 700px;
+            margin: auto;
+            line-height: 1.7;
+        }
+
+        .developer {
+            margin-top: 18px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .developer strong {
+            color: #c084fc;
+        }
+
+        /* ---------- MAIN ---------- */
+
+        .container {
+            width: 92%;
+            max-width: 1250px;
+            margin: auto;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #0c0c13, #08080d);
+            border: 1px solid #282833;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+        }
+
+        .card:hover {
+            border-color: #56308c;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .purple {
+            background: #21102f;
+            color: #b45cff;
+            border: 1px solid #6d28d9;
+        }
+
+        .green {
+            background: #06251b;
+            color: #00e599;
+            border: 1px solid #087f5b;
+        }
+
+        .card-title h2 {
+            font-size: 20px;
+        }
+
+        .card-title p {
+            color: #888;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        /* ---------- TEXTAREA ---------- */
+
+        textarea {
+            width: 100%;
+            height: 220px;
+            resize: vertical;
+            background: #07070c;
+            border: 1px solid #343440;
+            border-radius: 12px;
+            color: white;
+            padding: 17px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
+        }
+
+        textarea::placeholder {
+            color: #666;
+        }
+
+        /* ---------- BUTTON ---------- */
+
+        .analyze-btn {
+            width: 100%;
+            margin-top: 18px;
+            padding: 16px;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(90deg, #9b27e8, #2563eb);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(124,58,237,0.35);
+        }
+
+        /* ---------- UPLOAD ---------- */
+
+        .upload-area {
+            height: 220px;
+            border: 1px dashed #444454;
+            border-radius: 13px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #07070c;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #00c98b;
+            background: #08120f;
+        }
+
+        .upload-icon {
+            font-size: 42px;
+            color: #00d99b;
+            margin-bottom: 12px;
+        }
+
+        .upload-area h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .upload-area p {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .upload-area span {
+            color: #00d99b;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            background: #0b0b11;
+            border: 1px solid #33333e;
+            color: #aaa;
+            border-radius: 9px;
+        }
+
+        .upload-btn {
+            width: 100%;
+            margin-top: 14px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #00b87a;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .upload-btn:hover {
+            background: #00d18b;
+        }
+
+        /* ---------- FEATURES ---------- */
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-top: 25px;
+        }
+
+        .feature {
+            background: #0a0a10;
+            border: 1px solid #292933;
+            border-radius: 15px;
+            padding: 24px;
+            transition: 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-4px);
+            border-color: #6842a5;
+        }
+
+        .feature-icon {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .feature h3 {
+            font-size: 16px;
+            margin-bottom: 9px;
+        }
+
+        .feature p {
+            color: #888;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* ---------- TOOLS ---------- */
+
+        .tools {
+            margin-top: 25px;
+            background: #0a0a10;
+            border: 1px solid #292933;
+            border-radius: 17px;
+            padding: 25px;
+        }
+
+        .tools h2 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .tool {
+            padding: 17px;
+            background: #101018;
+            border: 1px solid #30303b;
+            border-radius: 10px;
+            color: #ddd;
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .tool:hover {
+            border-color: #8b5cf6;
+            color: #c084fc;
+        }
+
+        /* ---------- FOOTER ---------- */
+
+        footer {
+            margin-top: 60px;
+            padding: 28px;
+            text-align: center;
+            border-top: 1px solid #252530;
+            background: #07070b;
+            color: #777;
+            font-size: 13px;
+        }
+
+        footer strong {
+            color: #b45cff;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+
+        @media(max-width: 900px) {
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tool-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+        }
+
+        @media(max-width: 550px) {
+
+            .features,
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .ai-badge {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            📄
+        </div>
+
+        <div>
+            <h2>Resume<span>AI</span></h2>
+            <p>AI Resume Screening System</p>
+        </div>
+
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">⌂ Home</a>
+
+        <a href="/read">
+            📄 Read Resume
+        </a>
+
+        <a href="/skills">
+            🧠 View Skills
+        </a>
+
+        <a href="/score">
+            📊 Resume Score
+        </a>
+
+        <a href="/ats">
+            🎯 ATS Match
+        </a>
+
+    </div>
+
+    <div class="ai-badge">
+        ✨ AI Powered
+    </div>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <h1>
+        AI Resume <span>Screening System</span>
+    </h1>
+
+    <p>
+        Analyze resumes intelligently, match skills with job requirements,
+        and make better hiring decisions faster.
+    </p>
+
+    <div class="developer">
+        Developed by <strong>Lavanyasri Velpuri</strong>
+    </div>
+
+</section>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+    <div class="main-grid">
+
+
+        <!-- JOB DESCRIPTION -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <div class="icon purple">
+                    💼
+                </div>
+
+                <div>
+                    <h2>Job Description</h2>
+
+                    <p>
+                        Paste the job description to identify required skills.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <form action="/analyze" method="POST" enctype="multipart/form-data">
+
+                <textarea
+                    name="job_description"
+                    placeholder="Paste Job Description Here..."
+                    required></textarea>
+
+
+                <button class="analyze-btn" type="submit">
+                    🚀 Analyze Resume
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- RESUME UPLOAD -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <div class="icon green">
+                    ⬆
+                </div>
+
+                <div>
+                    <h2>Upload Resume</h2>
+
+                    <p>
+                        Upload your resume in PDF format for analysis.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+
+                <label for="resume">
+
+                    <div class="upload-area">
+
+                        <div class="upload-icon">
+                            ☁
+                        </div>
+
+                        <h3>
+                            Click to select your resume
+                        </h3>
+
+                        <p>
+                            Upload your PDF resume
+                        </p>
+
+                        <span>
+                            Supported format: PDF
+                        </span>
+
+                    </div>
+
+                </label>
+
+
+                <input
+                    type="file"
+                    id="resume"
+                    name="resume"
+                    accept=".pdf"
+                    required>
+
+
+                <button class="upload-btn" type="submit">
+                    ⬆ Upload Resume
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= FEATURES ================= -->
+
+    <div class="features">
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                📄
+            </div>
+
+            <h3>
+                Resume Extraction
+            </h3>
+
+            <p>
+                Extract text accurately from uploaded resumes.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🧠
+            </div>
+
+            <h3>
+                Skill Detection
+            </h3>
+
+            <p>
+                Automatically detect and highlight important skills.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                📊
+            </div>
+
+            <h3>
+                Resume Scoring
+            </h3>
+
+            <p>
+                Calculate the overall resume score based on skills.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🎯
+            </div>
+
+            <h3>
+                ATS Matching
+            </h3>
+
+            <p>
+                Compare resume skills with job requirements.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= TOOLS ================= -->
+
+    <div class="tools">
+
+        <h2>
+            📈 Resume Analysis Tools
+        </h2>
+
+        <div class="tool-grid">
+
+            <a href="/read" class="tool">
+                📄 Read Resume
+                <span>›</span>
+            </a>
+
+            <a href="/skills" class="tool">
+                🧠 View Skills
+                <span>›</span>
+            </a>
+
+            <a href="/score" class="tool">
+                📊 Resume Score
+                <span>›</span>
+            </a>
+
+            <a href="/ats" class="tool">
+                🎯 ATS Match
+                <span>›</span>
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        AI Resume Screening System
+        &nbsp; • &nbsp;
+        Built with Python & Flask
+    </p>
+
+    <p style="margin-top:8px;">
+        Developed by
+        <strong>Lavanyasri Velpuri</strong>
+    </p>
+
+</footer>
+
+</body>
+</html>
