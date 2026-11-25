@@ -17,10 +17,10 @@ import secrets
 
 app = Flask(__name__)
 
-app.secret_key = os.environ.get(
-    "SECRET_KEY",
-    "development-only-change-this-secret"
-)
+app.secret_key = os.environ.get("SECRET_KEY")
+
+if not app.secret_key:
+    raise RuntimeError("SECRET_KEY environment variable is not set.")
 
 CORS(app)
 
@@ -463,4 +463,4 @@ def file_too_large(error):
 # =====================================================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
